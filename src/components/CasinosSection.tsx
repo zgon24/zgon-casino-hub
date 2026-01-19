@@ -1,17 +1,23 @@
 import CasinoCard from "./CasinoCard";
+import stakeLogo from "@/assets/stake-logo.png";
+import flagmanLogo from "@/assets/flagman-logo.png";
+import lebullLogo from "@/assets/lebull-logo.png";
 
 const casinos = [
   {
     name: "Stake",
     url: "https://stake.com/",
+    logo: stakeLogo,
   },
   {
     name: "Flagman",
     url: "https://flagman-fjfjy.com/",
+    logo: flagmanLogo,
   },
   {
     name: "LeBull",
     url: "https://www.lebull.pt/?partner=p71175p72304p7426#registration",
+    logo: lebullLogo,
   },
 ];
 
@@ -40,15 +46,12 @@ const CasinosSection = () => {
               <CasinoCard
                 name={casino.name}
                 url={casino.url}
+                logo={casino.logo}
               />
             </div>
           ))}
         </div>
 
-        {/* Note */}
-        <p className="text-center text-muted-foreground/60 text-sm mt-12 max-w-xl mx-auto">
-          Os links de afiliado serão atualizados em breve. Os botões já estão preparados para funcionar com os novos URLs.
-        </p>
       </div>
     </section>
   );
