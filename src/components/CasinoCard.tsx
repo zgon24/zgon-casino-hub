@@ -13,10 +13,10 @@ import {
 interface CasinoCardProps {
   name: string;
   url: string;
-  logoPlaceholder?: string;
+  logo?: string;
 }
 
-const CasinoCard = ({ name, url, logoPlaceholder }: CasinoCardProps) => {
+const CasinoCard = ({ name, url, logo }: CasinoCardProps) => {
   const [showDialog, setShowDialog] = useState(false);
 
   const handleConfirm = () => {
@@ -31,10 +31,10 @@ const CasinoCard = ({ name, url, logoPlaceholder }: CasinoCardProps) => {
         <div className="absolute inset-0 rounded-2xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
         <div className="relative z-10 flex flex-col items-center space-y-6">
-          {/* Logo placeholder */}
-          <div className="w-24 h-24 rounded-xl bg-secondary flex items-center justify-center border border-border/50 group-hover:border-primary/30 transition-colors duration-300">
-            {logoPlaceholder ? (
-              <img src={logoPlaceholder} alt={name} className="w-16 h-16 object-contain" />
+          {/* Logo */}
+          <div className="w-32 h-32 rounded-xl bg-secondary/50 flex items-center justify-center border border-border/50 group-hover:border-primary/30 transition-colors duration-300 overflow-hidden">
+            {logo ? (
+              <img src={logo} alt={name} className="w-full h-full object-contain p-2" />
             ) : (
               <span className="text-2xl font-bold text-muted-foreground">{name.charAt(0)}</span>
             )}
