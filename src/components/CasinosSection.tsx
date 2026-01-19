@@ -8,6 +8,7 @@ const casinos = [
     name: "Stake",
     url: "https://stake.com/",
     logo: stakeLogo,
+    note: "(Necessário VPN para aceder)",
   },
   {
     name: "Flagman",
@@ -47,6 +48,7 @@ const CasinosSection = () => {
                 name={casino.name}
                 url={casino.url}
                 logo={casino.logo}
+                note={(casino as any).note}
               />
             </div>
           ))}

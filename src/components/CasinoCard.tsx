@@ -14,9 +14,10 @@ interface CasinoCardProps {
   name: string;
   url: string;
   logo?: string;
+  note?: string;
 }
 
-const CasinoCard = ({ name, url, logo }: CasinoCardProps) => {
+const CasinoCard = ({ name, url, logo, note }: CasinoCardProps) => {
   const [showDialog, setShowDialog] = useState(false);
 
   const handleConfirm = () => {
@@ -42,6 +43,9 @@ const CasinoCard = ({ name, url, logo }: CasinoCardProps) => {
           
           {/* Casino name */}
           <h3 className="text-xl font-semibold text-foreground">{name}</h3>
+          {note && (
+            <p className="text-xs text-muted-foreground -mt-4">{note}</p>
+          )}
           
           {/* Play button */}
           <button
