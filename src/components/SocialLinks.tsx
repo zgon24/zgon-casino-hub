@@ -73,7 +73,7 @@ const socialLinks: SocialLink[] = [
 
 const SocialLinks = () => {
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-background to-card/30">
+    <section id="redes-sociais" className="py-20 px-4 bg-gradient-to-b from-background to-card/30">
       <div className="max-w-4xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-12 space-y-4">
