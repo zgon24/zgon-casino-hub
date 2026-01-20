@@ -1,15 +1,33 @@
+import zgonHero from "@/assets/zgon-hero.png";
+import zgonAvatar from "@/assets/zgon-avatar.png";
+
 const Header = () => {
   return (
-    <header className="relative min-h-[50vh] flex flex-col items-center justify-center px-4 py-20">
-      {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-card/50 to-background pointer-events-none" />
+    <header className="relative min-h-[60vh] flex flex-col items-center justify-center px-4 py-20 overflow-hidden">
+      {/* Hero background image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${zgonHero})` }}
+      />
+      
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background" />
       
       {/* Decorative glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/15 blur-[120px] rounded-full pointer-events-none" />
       
       <div className="relative z-10 text-center space-y-6">
+        {/* Avatar */}
+        <div className="mx-auto w-24 h-24 rounded-full border-4 border-primary/50 overflow-hidden shadow-lg shadow-primary/20 animate-fadeIn">
+          <img 
+            src={zgonAvatar} 
+            alt="ZGON Avatar" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        
         {/* Logo / Name */}
-        <h1 className="text-6xl md:text-8xl font-black tracking-tight text-gradient-gold animate-fadeIn">
+        <h1 className="text-6xl md:text-8xl font-black tracking-tight text-gradient-gold animate-fadeIn" style={{ animationDelay: "0.1s" }}>
           ZGON
         </h1>
         
