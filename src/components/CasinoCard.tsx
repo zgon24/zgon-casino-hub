@@ -14,10 +14,11 @@ interface CasinoCardProps {
   name: string;
   url: string;
   logo?: string;
+  code?: string;
   note?: string;
 }
 
-const CasinoCard = ({ name, url, logo, note }: CasinoCardProps) => {
+const CasinoCard = ({ name, url, logo, code, note }: CasinoCardProps) => {
   const [showDialog, setShowDialog] = useState(false);
 
   const handleConfirm = () => {
@@ -43,8 +44,13 @@ const CasinoCard = ({ name, url, logo, note }: CasinoCardProps) => {
           
           {/* Casino name */}
           <h3 className="text-xl font-semibold text-foreground">{name}</h3>
+          {code && (
+            <p className="text-sm text-primary font-medium -mt-4">
+              Código: <span className="font-bold">{code}</span>
+            </p>
+          )}
           {note && (
-            <p className="text-xs text-muted-foreground -mt-4">{note}</p>
+            <p className="text-xs text-muted-foreground -mt-3">{note}</p>
           )}
           
           {/* Play button */}
