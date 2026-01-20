@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { HelpCircle } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,16 +10,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface CasinoCardProps {
   name: string;
   url: string;
   logo?: string;
   code?: string;
+  codeHelp?: string;
   note?: string;
 }
 
-const CasinoCard = ({ name, url, logo, code, note }: CasinoCardProps) => {
+const CasinoCard = ({ name, url, logo, code, codeHelp, note }: CasinoCardProps) => {
   const [showDialog, setShowDialog] = useState(false);
 
   const handleConfirm = () => {
@@ -45,9 +53,28 @@ const CasinoCard = ({ name, url, logo, code, note }: CasinoCardProps) => {
           {/* Casino name */}
           <h3 className="text-xl font-semibold text-foreground">{name}</h3>
           {code && (
-            <p className="text-sm text-primary font-medium -mt-4">
-              Código: <span className="font-bold">{code}</span>
-            </p>
+            <div className="flex items-center gap-1.5 -mt-4">
+              <p className="text-sm text-primary font-medium">
+                Código: <span className="font-bold">{code}</span>
+              </p>
+              {codeHelp && (
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button className="text-muted-foreground hover:text-primary transition-colors">
+                        <HelpCircle className="w-4 h-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent 
+                      side="top" 
+                      className="max-w-xs bg-card border-border text-foreground p-3 text-xs leading-relaxed"
+                    >
+                      {codeHelp}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
           )}
           {note && (
             <p className="text-xs text-muted-foreground -mt-3">{note}</p>
