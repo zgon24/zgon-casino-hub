@@ -9,6 +9,7 @@ const casinos = [
     url: "https://stake.com/?c=r4QBeW03",
     logo: stakeLogo,
     code: "zgonstake",
+    codeHelp: "Esqueceste de inserir o código? Podes adicionar até 24h após o registo: Ícone de utilizador → Settings → Offers → Welcome Code",
     note: "(Necessário VPN para aceder)",
   },
   {
@@ -50,6 +51,7 @@ const CasinosSection = () => {
                 url={casino.url}
                 logo={casino.logo}
                 code={(casino as any).code}
+                codeHelp={(casino as any).codeHelp}
                 note={(casino as any).note}
               />
             </div>
