@@ -26,7 +26,7 @@ const casinos = [
 
 const CasinosSection = () => {
   return (
-    <section className="py-20 px-4">
+    <section id="casinos" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-16 space-y-4">
