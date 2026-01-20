@@ -6,7 +6,7 @@ import lebullLogo from "@/assets/lebull-logo.png";
 const casinos = [
   {
     name: "Stake",
-    url: "https://stake.com/",
+    url: "https://stake.com/?c=r4QBeW03",
     logo: stakeLogo,
     note: "(Necessário VPN para aceder)",
   },
