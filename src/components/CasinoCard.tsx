@@ -36,7 +36,10 @@ const CasinoCard = ({ name, url, logo, code, codeHelp, note }: CasinoCardProps) 
 
   return (
     <>
-      <div className="group relative card-elevated rounded-2xl p-8 border border-border/50 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02]">
+      <div 
+        onClick={() => setShowDialog(true)}
+        className="group relative card-elevated rounded-2xl p-8 border border-border/50 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02] cursor-pointer"
+      >
         {/* Glow effect on hover */}
         <div className="absolute inset-0 rounded-2xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
