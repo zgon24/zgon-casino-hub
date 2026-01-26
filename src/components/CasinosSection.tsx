@@ -12,11 +12,12 @@ const casinos = [
     codeHelp: "Esqueceste de inserir o código? Podes adicionar até 24h após o registo: Ícone de utilizador → Settings → Offers → Welcome Code",
     note: "(Necessário VPN para aceder)",
   },
-  {
-    name: "Flagman",
-    url: "https://flagman-fjfjy.com/",
-    logo: flagmanLogo,
-  },
+  // FLAGMAN - Temporariamente removido (descomentar para reativar)
+  // {
+  //   name: "Flagman",
+  //   url: "https://flagman-fjfjy.com/",
+  //   logo: flagmanLogo,
+  // },
   {
     name: "LeBull",
     url: "https://www.lebull.pt/?partner=p71175p72304p7426#registration",
