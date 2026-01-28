@@ -1,4 +1,5 @@
-import { Dices, Share2, HelpCircle, Mail, X } from "lucide-react";
+import { Dices, Share2, HelpCircle, Mail, X, Trophy } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -22,6 +23,12 @@ const menuItems = [
     href: "#contacto",
   },
   {
+    title: "BonusHunt",
+    icon: Trophy,
+    href: "/bonushunt",
+    isRoute: true,
+  },
+  {
     title: "Gambling Help",
     icon: HelpCircle,
     href: "https://www.jogoresponsavel.pt",
@@ -30,9 +37,13 @@ const menuItems = [
 ];
 
 const AppSidebar = ({ isOpen, onClose }: AppSidebarProps) => {
-  const handleClick = (href: string, external?: boolean) => {
+  const navigate = useNavigate();
+  
+  const handleClick = (href: string, external?: boolean, isRoute?: boolean) => {
     if (external) {
       window.open(href, "_blank", "noopener,noreferrer");
+    } else if (isRoute) {
+      navigate(href);
     } else {
       const element = document.querySelector(href);
       if (element) {
@@ -74,7 +85,7 @@ const AppSidebar = ({ isOpen, onClose }: AppSidebarProps) => {
           {menuItems.map((item) => (
             <button
               key={item.title}
-              onClick={() => handleClick(item.href, item.external)}
+              onClick={() => handleClick(item.href, item.external, (item as any).isRoute)}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-foreground hover:bg-secondary/50 hover:text-primary transition-all duration-200 group"
             >
               <item.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />

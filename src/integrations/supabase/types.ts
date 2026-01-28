@@ -14,13 +14,116 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bonus_hunts: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          status: string
+          total_cost: number | null
+          total_result: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string
+          status?: string
+          total_cost?: number | null
+          total_result?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          status?: string
+          total_cost?: number | null
+          total_result?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      slots: {
+        Row: {
+          bet_size: number
+          bonus_hunt_id: string
+          cost: number
+          created_at: string
+          id: string
+          result: number | null
+          slot_name: string
+          slot_order: number
+          status: string
+        }
+        Insert: {
+          bet_size?: number
+          bonus_hunt_id: string
+          cost?: number
+          created_at?: string
+          id?: string
+          result?: number | null
+          slot_name: string
+          slot_order?: number
+          status?: string
+        }
+        Update: {
+          bet_size?: number
+          bonus_hunt_id?: string
+          cost?: number
+          created_at?: string
+          id?: string
+          result?: number | null
+          slot_name?: string
+          slot_order?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "slots_bonus_hunt_id_fkey"
+            columns: ["bonus_hunt_id"]
+            isOneToOne: false
+            referencedRelation: "bonus_hunts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_bonus_hunt_owner: { Args: { hunt_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
