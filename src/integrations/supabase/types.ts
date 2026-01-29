@@ -17,8 +17,10 @@ export type Database = {
       bonus_hunts: {
         Row: {
           created_at: string
+          hunt_phase: string
           id: string
           name: string
+          start_amount: number | null
           status: string
           total_cost: number | null
           total_result: number | null
@@ -27,8 +29,10 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          hunt_phase?: string
           id?: string
           name?: string
+          start_amount?: number | null
           status?: string
           total_cost?: number | null
           total_result?: number | null
@@ -37,8 +41,10 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          hunt_phase?: string
           id?: string
           name?: string
+          start_amount?: number | null
           status?: string
           total_cost?: number | null
           total_result?: number | null
@@ -81,6 +87,9 @@ export type Database = {
           cost: number
           created_at: string
           id: string
+          image_url: string | null
+          is_extreme: boolean
+          is_super: boolean
           result: number | null
           slot_name: string
           slot_order: number
@@ -92,6 +101,9 @@ export type Database = {
           cost?: number
           created_at?: string
           id?: string
+          image_url?: string | null
+          is_extreme?: boolean
+          is_super?: boolean
           result?: number | null
           slot_name: string
           slot_order?: number
@@ -103,6 +115,9 @@ export type Database = {
           cost?: number
           created_at?: string
           id?: string
+          image_url?: string | null
+          is_extreme?: boolean
+          is_super?: boolean
           result?: number | null
           slot_name?: string
           slot_order?: number
