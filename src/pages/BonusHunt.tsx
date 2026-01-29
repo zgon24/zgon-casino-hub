@@ -8,25 +8,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { 
   Plus, 
-  Trash2, 
-  Play, 
-  Check, 
   Copy, 
   LogOut, 
   Trophy,
   ArrowLeft,
   Loader2,
-  GripVertical
+  Play,
+  Check
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,25 +28,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
-interface Slot {
-  id: string;
-  slot_name: string;
-  bet_size: number;
-  cost: number;
-  result: number | null;
-  status: "pending" | "opened";
-  slot_order: number;
-}
-
-interface BonusHunt {
-  id: string;
-  name: string;
-  status: "active" | "completed";
-  total_cost: number;
-  total_result: number;
-  created_at: string;
-}
+import { Slot, BonusHunt } from "@/components/bonushunt/types";
+import SlotCard from "@/components/bonushunt/SlotCard";
+import AddSlotForm from "@/components/bonushunt/AddSlotForm";
+import StatsCards from "@/components/bonushunt/StatsCards";
+import { Label } from "@/components/ui/label";
 
 const BonusHuntPage = () => {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -67,11 +43,7 @@ const BonusHuntPage = () => {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [loading, setLoading] = useState(true);
   const [huntName, setHuntName] = useState("Bonus Hunt");
-
-  // New slot form
-  const [newSlotName, setNewSlotName] = useState("");
-  const [newBetSize, setNewBetSize] = useState("");
-  const [newCost, setNewCost] = useState("");
+  const [startAmount, setStartAmount] = useState("");
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -90,7 +62,6 @@ const BonusHuntPage = () => {
     
     setLoading(true);
     
-    // Try to find an active bonus hunt
     const { data: hunts, error } = await supabase
       .from("bonus_hunts")
       .select("*")
@@ -106,7 +77,7 @@ const BonusHuntPage = () => {
     }
 
     if (hunts && hunts.length > 0) {
-      const hunt = hunts[0] as BonusHunt;
+      const hunt = hunts[0] as unknown as BonusHunt;
       setBonusHunt(hunt);
       setHuntName(hunt.name);
       await loadSlots(hunt.id);
@@ -127,11 +98,13 @@ const BonusHuntPage = () => {
       return;
     }
 
-    setSlots((data as Slot[]) || []);
+    setSlots((data as unknown as Slot[]) || []);
   };
 
   const createNewBonusHunt = async () => {
     if (!user) return;
+
+    const start = parseFloat(startAmount) || 0;
 
     const { data, error } = await supabase
       .from("bonus_hunts")
@@ -141,6 +114,8 @@ const BonusHuntPage = () => {
         status: "active",
         total_cost: 0,
         total_result: 0,
+        start_amount: start,
+        hunt_phase: "collecting",
       })
       .select()
       .single();
@@ -154,7 +129,7 @@ const BonusHuntPage = () => {
       return;
     }
 
-    setBonusHunt(data as BonusHunt);
+    setBonusHunt(data as unknown as BonusHunt);
     setSlots([]);
     toast({
       title: "Bonus Hunt criado!",
@@ -162,56 +137,34 @@ const BonusHuntPage = () => {
     });
   };
 
-  const addSlot = async () => {
-    if (!bonusHunt || !newSlotName || !newBetSize || !newCost) return;
+  const startHunt = async () => {
+    if (!bonusHunt || slots.length === 0) return;
 
-    const betSize = parseFloat(newBetSize);
-    const cost = parseFloat(newCost);
-
-    if (isNaN(betSize) || isNaN(cost)) {
-      toast({
-        variant: "destructive",
-        title: "Erro",
-        description: "Valores inválidos",
-      });
-      return;
-    }
-
-    const { data, error } = await supabase
-      .from("slots")
-      .insert({
-        bonus_hunt_id: bonusHunt.id,
-        slot_name: newSlotName,
-        bet_size: betSize,
-        cost: cost,
-        status: "pending",
-        slot_order: slots.length,
-      })
-      .select()
-      .single();
+    const { error } = await supabase
+      .from("bonus_hunts")
+      .update({ hunt_phase: "opening" })
+      .eq("id", bonusHunt.id);
 
     if (error) {
       toast({
         variant: "destructive",
         title: "Erro",
-        description: "Não foi possível adicionar o slot",
+        description: "Não foi possível iniciar o bonus hunt",
       });
       return;
     }
 
-    setSlots([...slots, data as Slot]);
-    setNewSlotName("");
-    setNewBetSize("");
-    setNewCost("");
-
-    // Update total cost
-    await updateTotals([...slots, data as Slot]);
+    setBonusHunt({ ...bonusHunt, hunt_phase: "opening" });
+    toast({
+      title: "Bonus Hunt iniciado!",
+      description: "Agora podes abrir os bónus",
+    });
   };
 
-  const openSlot = async (slotId: string, result: number) => {
+  const openSlot = async (slotId: string, result: number, isSuper: boolean, isExtreme: boolean) => {
     const { error } = await supabase
       .from("slots")
-      .update({ status: "opened", result })
+      .update({ status: "opened", result, is_super: isSuper, is_extreme: isExtreme })
       .eq("id", slotId);
 
     if (error) {
@@ -224,7 +177,7 @@ const BonusHuntPage = () => {
     }
 
     const updatedSlots = slots.map((s) =>
-      s.id === slotId ? { ...s, status: "opened" as const, result } : s
+      s.id === slotId ? { ...s, status: "opened" as const, result, is_super: isSuper, is_extreme: isExtreme } : s
     );
     setSlots(updatedSlots);
     await updateTotals(updatedSlots);
@@ -250,7 +203,7 @@ const BonusHuntPage = () => {
   const updateTotals = async (currentSlots: Slot[]) => {
     if (!bonusHunt) return;
 
-    const totalCost = currentSlots.reduce((sum, s) => sum + s.cost, 0);
+    const totalCost = currentSlots.reduce((sum, s) => sum + s.bet_size, 0);
     const totalResult = currentSlots.reduce((sum, s) => sum + (s.result || 0), 0);
 
     await supabase
@@ -292,6 +245,12 @@ const BonusHuntPage = () => {
     navigate("/");
   };
 
+  const handleSlotAdded = () => {
+    if (bonusHunt) {
+      loadSlots(bonusHunt.id);
+    }
+  };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -300,10 +259,8 @@ const BonusHuntPage = () => {
     );
   }
 
-  const totalCost = bonusHunt?.total_cost || 0;
-  const totalResult = bonusHunt?.total_result || 0;
-  const profit = totalResult - totalCost;
-  const profitMultiplier = totalCost > 0 ? (totalResult / totalCost).toFixed(2) : "0.00";
+  // Find the current slot to open (first pending slot)
+  const currentSlotIndex = slots.findIndex(s => s.status === "pending");
 
   return (
     <div className="min-h-screen bg-background">
@@ -350,12 +307,26 @@ const BonusHuntPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Input
-                placeholder="Nome do Bonus Hunt"
-                value={huntName}
-                onChange={(e) => setHuntName(e.target.value)}
-                className="bg-secondary/50"
-              />
+              <div className="space-y-2">
+                <Label className="text-sm text-muted-foreground">Nome do Bonus Hunt</Label>
+                <Input
+                  placeholder="Ex: Bonus Hunt #1"
+                  value={huntName}
+                  onChange={(e) => setHuntName(e.target.value)}
+                  className="bg-secondary/50"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm text-muted-foreground">Valor Inicial (€)</Label>
+                <Input
+                  placeholder="Ex: 1000.00"
+                  type="number"
+                  step="0.01"
+                  value={startAmount}
+                  onChange={(e) => setStartAmount(e.target.value)}
+                  className="bg-secondary/50"
+                />
+              </div>
               <Button 
                 onClick={createNewBonusHunt} 
                 className="w-full btn-gold text-primary-foreground font-semibold"
@@ -367,35 +338,8 @@ const BonusHuntPage = () => {
           </Card>
         ) : (
           <>
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Card className="border-border/50 bg-card/50">
-                <CardContent className="pt-6">
-                  <p className="text-sm text-muted-foreground">Total Gasto</p>
-                  <p className="text-2xl font-bold text-foreground">€{totalCost.toFixed(2)}</p>
-                </CardContent>
-              </Card>
-              <Card className="border-border/50 bg-card/50">
-                <CardContent className="pt-6">
-                  <p className="text-sm text-muted-foreground">Total Ganho</p>
-                  <p className="text-2xl font-bold text-primary">€{totalResult.toFixed(2)}</p>
-                </CardContent>
-              </Card>
-              <Card className="border-border/50 bg-card/50">
-                <CardContent className="pt-6">
-                  <p className="text-sm text-muted-foreground">Lucro/Prejuízo</p>
-                  <p className={`text-2xl font-bold ${profit >= 0 ? "text-green-500" : "text-destructive"}`}>
-                    €{profit.toFixed(2)}
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="border-border/50 bg-card/50">
-                <CardContent className="pt-6">
-                  <p className="text-sm text-muted-foreground">Multiplicador</p>
-                  <p className="text-2xl font-bold text-foreground">{profitMultiplier}x</p>
-                </CardContent>
-              </Card>
-            </div>
+            {/* Stats */}
+            <StatsCards bonusHunt={bonusHunt} slots={slots} />
 
             {/* Widget URL */}
             <Card className="border-border/50 bg-card/50">
@@ -407,101 +351,86 @@ const BonusHuntPage = () => {
                       Usa este link como Browser Source
                     </p>
                   </div>
-                  <Button 
-                    onClick={copyWidgetUrl} 
-                    variant="outline"
-                    className="shrink-0"
-                  >
-                    <Copy className="w-4 h-4 mr-2" />
-                    Copiar Link
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      onClick={copyWidgetUrl} 
+                      variant="outline"
+                      className="shrink-0"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copiar Link
+                    </Button>
+                    {bonusHunt.hunt_phase === "collecting" && slots.length > 0 && (
+                      <Button 
+                        onClick={startHunt}
+                        className="btn-gold text-primary-foreground font-semibold shrink-0"
+                      >
+                        <Play className="w-4 h-4 mr-2" />
+                        Iniciar Hunt
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Add Slot Form */}
-            <Card className="border-border/50 bg-card/50">
-              <CardHeader>
-                <CardTitle className="text-lg">Adicionar Slot</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                  <Input
-                    placeholder="Nome da Slot"
-                    value={newSlotName}
-                    onChange={(e) => setNewSlotName(e.target.value)}
-                    className="bg-secondary/50"
-                  />
-                  <Input
-                    placeholder="Bet Size (€)"
-                    type="number"
-                    step="0.01"
-                    value={newBetSize}
-                    onChange={(e) => setNewBetSize(e.target.value)}
-                    className="bg-secondary/50"
-                  />
-                  <Input
-                    placeholder="Custo Total (€)"
-                    type="number"
-                    step="0.01"
-                    value={newCost}
-                    onChange={(e) => setNewCost(e.target.value)}
-                    className="bg-secondary/50"
-                  />
-                  <Button 
-                    onClick={addSlot} 
-                    className="btn-gold text-primary-foreground font-semibold"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Adicionar
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Add Slot Form - Only show during collecting phase */}
+            {bonusHunt.hunt_phase === "collecting" && (
+              <AddSlotForm 
+                bonusHuntId={bonusHunt.id} 
+                slotsCount={slots.length}
+                onSlotAdded={handleSlotAdded}
+              />
+            )}
 
-            {/* Slots Table */}
-            <Card className="border-border/50 bg-card/50 overflow-hidden">
-              <CardHeader>
-                <CardTitle className="text-lg">
-                  Slots ({slots.length})
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-border/50">
-                        <TableHead className="w-12">#</TableHead>
-                        <TableHead>Slot</TableHead>
-                        <TableHead className="text-right">Bet</TableHead>
-                        <TableHead className="text-right">Custo</TableHead>
-                        <TableHead className="text-right">Resultado</TableHead>
-                        <TableHead className="text-center">Status</TableHead>
-                        <TableHead className="text-right">Ações</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {slots.map((slot, index) => (
-                        <SlotRow
-                          key={slot.id}
-                          slot={slot}
-                          index={index}
-                          onOpen={openSlot}
-                          onDelete={deleteSlot}
-                        />
-                      ))}
-                      {slots.length === 0 && (
-                        <TableRow>
-                          <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                            Ainda não adicionaste nenhuma slot
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
+            {/* Hunt Phase Indicator */}
+            <div className="flex items-center justify-center gap-4">
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${
+                bonusHunt.hunt_phase === "collecting" 
+                  ? "bg-primary/20 text-primary" 
+                  : "bg-secondary text-muted-foreground"
+              }`}>
+                <Plus className="w-4 h-4" />
+                <span className="text-sm font-medium">A Colecionar</span>
+              </div>
+              <div className="w-8 h-0.5 bg-border" />
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${
+                bonusHunt.hunt_phase === "opening" 
+                  ? "bg-primary/20 text-primary" 
+                  : "bg-secondary text-muted-foreground"
+              }`}>
+                <Play className="w-4 h-4" />
+                <span className="text-sm font-medium">A Abrir</span>
+              </div>
+            </div>
+
+            {/* Slots Grid */}
+            <div>
+              <h2 className="text-lg font-semibold mb-4">
+                Slots ({slots.length})
+              </h2>
+              {slots.length === 0 ? (
+                <Card className="border-border/50 bg-card/50">
+                  <CardContent className="py-12 text-center text-muted-foreground">
+                    Ainda não adicionaste nenhuma slot
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {slots.map((slot, index) => (
+                    <SlotCard
+                      key={slot.id}
+                      slot={slot}
+                      index={index}
+                      huntPhase={bonusHunt.hunt_phase}
+                      isCurrentSlot={index === currentSlotIndex}
+                      onOpen={openSlot}
+                      onDelete={deleteSlot}
+                    />
+                  ))}
                 </div>
-              </CardContent>
-            </Card>
+              )}
+            </div>
 
             {/* Complete Hunt Button */}
             <div className="flex justify-center">
@@ -533,93 +462,6 @@ const BonusHuntPage = () => {
         )}
       </main>
     </div>
-  );
-};
-
-// Slot Row Component
-interface SlotRowProps {
-  slot: Slot;
-  index: number;
-  onOpen: (id: string, result: number) => void;
-  onDelete: (id: string) => void;
-}
-
-const SlotRow = ({ slot, index, onOpen, onDelete }: SlotRowProps) => {
-  const [result, setResult] = useState("");
-  const [showResultInput, setShowResultInput] = useState(false);
-
-  const handleOpen = () => {
-    const resultValue = parseFloat(result);
-    if (!isNaN(resultValue)) {
-      onOpen(slot.id, resultValue);
-      setShowResultInput(false);
-      setResult("");
-    }
-  };
-
-  return (
-    <TableRow className="border-border/50">
-      <TableCell className="font-mono text-muted-foreground">{index + 1}</TableCell>
-      <TableCell className="font-medium">{slot.slot_name}</TableCell>
-      <TableCell className="text-right">€{slot.bet_size.toFixed(2)}</TableCell>
-      <TableCell className="text-right">€{slot.cost.toFixed(2)}</TableCell>
-      <TableCell className="text-right">
-        {slot.status === "opened" ? (
-          <span className="text-primary font-semibold">€{slot.result?.toFixed(2)}</span>
-        ) : showResultInput ? (
-          <div className="flex items-center gap-2 justify-end">
-            <Input
-              type="number"
-              step="0.01"
-              value={result}
-              onChange={(e) => setResult(e.target.value)}
-              className="w-24 h-8 bg-secondary/50 text-right"
-              placeholder="€"
-              autoFocus
-              onKeyDown={(e) => e.key === "Enter" && handleOpen()}
-            />
-            <Button size="sm" variant="ghost" onClick={handleOpen}>
-              <Check className="w-4 h-4" />
-            </Button>
-          </div>
-        ) : (
-          <span className="text-muted-foreground">-</span>
-        )}
-      </TableCell>
-      <TableCell className="text-center">
-        {slot.status === "opened" ? (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
-            Aberto
-          </span>
-        ) : (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-secondary text-muted-foreground">
-            Pendente
-          </span>
-        )}
-      </TableCell>
-      <TableCell className="text-right">
-        <div className="flex items-center justify-end gap-2">
-          {slot.status === "pending" && !showResultInput && (
-            <Button 
-              size="sm" 
-              variant="ghost" 
-              onClick={() => setShowResultInput(true)}
-              className="text-primary hover:text-primary"
-            >
-              <Play className="w-4 h-4" />
-            </Button>
-          )}
-          <Button 
-            size="sm" 
-            variant="ghost" 
-            onClick={() => onDelete(slot.id)}
-            className="text-destructive hover:text-destructive"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        </div>
-      </TableCell>
-    </TableRow>
   );
 };
 
