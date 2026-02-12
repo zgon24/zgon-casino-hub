@@ -20,7 +20,7 @@ const casinos = [
   // },
   {
     name: "LeBull",
-    url: "https://www.lebull.pt/?partner=p71175p72304p7426#registration",
+    url: "https://www.lebull.pt/?partner=p71175p72532p7138&utm_source=aff&utm_medium=affiliate&utm_campaign=2026&utm_content=reg-page#registration",
     logo: lebullLogo,
   },
 ];
