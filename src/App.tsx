@@ -9,6 +9,9 @@ import Auth from "./pages/Auth";
 import BonusHunt from "./pages/BonusHunt";
 import Widget from "./pages/Widget";
 import NotFound from "./pages/NotFound";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import SlotCatalog from "./pages/SlotCatalog";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +25,10 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/bonushunt" element={<BonusHunt />} />
+            <Route path="/slot-catalog" element={<SlotCatalog />} />
             <Route path="/widget/:huntId" element={<Widget />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
