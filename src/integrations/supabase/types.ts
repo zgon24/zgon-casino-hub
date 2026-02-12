@@ -80,6 +80,36 @@ export type Database = {
         }
         Relationships: []
       }
+      slot_catalog: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          name: string
+          provider: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name: string
+          provider?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+          provider?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       slots: {
         Row: {
           bet_size: number
@@ -139,6 +169,8 @@ export type Database = {
     }
     Functions: {
       is_bonus_hunt_owner: { Args: { hunt_id: string }; Returns: boolean }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
     }
     Enums: {
       [_ in never]: never

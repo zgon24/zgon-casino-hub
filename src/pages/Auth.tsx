@@ -178,6 +178,14 @@ const Auth = () => {
                       "Entrar"
                     )}
                   </Button>
+                  <div className="text-center">
+                    <Link 
+                      to="/forgot-password" 
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Esqueceste a password?
+                    </Link>
+                  </div>
                 </form>
               </TabsContent>
 

@@ -278,6 +278,12 @@ const BonusHuntPage = () => {
               <Trophy className="w-6 h-6 text-primary" />
               <h1 className="text-xl font-bold text-gradient-gold">BonusHunt</h1>
             </div>
+            <Link 
+              to="/slot-catalog" 
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              📚 Catálogo
+            </Link>
           </div>
           
           <div className="flex items-center gap-4">
