@@ -1,5 +1,7 @@
+import { useRef } from "react";
 import CasinoCard from "./CasinoCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 import stakeLogo from "@/assets/stake-logo.png";
 import flagmanLogo from "@/assets/flagman-logo.png";
 import lebullLogo from "@/assets/lebull-logo.png";
@@ -42,6 +44,10 @@ const casinos = [
 ];
 
 const CasinosSection = () => {
+  const autoplayPlugin = useRef(
+    Autoplay({ delay: 2500, stopOnInteraction: false, stopOnMouseEnter: true })
+  );
+
   return (
     <section id="casinos" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
@@ -57,20 +63,26 @@ const CasinosSection = () => {
 
         {/* Casino cards carousel */}
         <div className="max-w-5xl mx-auto px-12">
-          <Carousel opts={{ align: "start", loop: true }} className="w-full">
+          <Carousel
+            opts={{ align: "start", loop: true }}
+            plugins={[autoplayPlugin.current]}
+            className="w-full"
+          >
             <CarouselContent className="-ml-4">
               {casinos.map((casino) => (
                 <CarouselItem key={casino.name} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                  <CasinoCard
-                    name={casino.name}
-                    url={casino.url}
-                    logo={(casino as any).logo}
-                    banner={(casino as any).banner}
-                    code={(casino as any).code}
-                    codeHelp={(casino as any).codeHelp}
-                    note={(casino as any).note}
-                    freeSpins={(casino as any).freeSpins}
-                  />
+                  <div className="transition-transform duration-300 hover:scale-105">
+                    <CasinoCard
+                      name={casino.name}
+                      url={casino.url}
+                      logo={(casino as any).logo}
+                      banner={(casino as any).banner}
+                      code={(casino as any).code}
+                      codeHelp={(casino as any).codeHelp}
+                      note={(casino as any).note}
+                      freeSpins={(casino as any).freeSpins}
+                    />
+                  </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
