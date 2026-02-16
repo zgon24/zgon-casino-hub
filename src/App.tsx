@@ -6,12 +6,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import BonusHunt from "./pages/BonusHunt";
-import Widget from "./pages/Widget";
+import Casinos from "./pages/Casinos";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import SlotCatalog from "./pages/SlotCatalog";
 
 const queryClient = new QueryClient();
 
@@ -27,9 +25,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/bonushunt" element={<BonusHunt />} />
-            <Route path="/slot-catalog" element={<SlotCatalog />} />
-            <Route path="/widget/:huntId" element={<Widget />} />
+            <Route path="/casinos" element={<Casinos />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

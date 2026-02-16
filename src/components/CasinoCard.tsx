@@ -16,19 +16,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { Casino } from "@/data/casinos";
 
-interface CasinoCardProps {
-  name: string;
-  url: string;
-  logo?: string;
-  banner?: string;
-  code?: string;
-  codeHelp?: string;
-  note?: string;
-  freeSpins?: number;
+interface CasinoCardProps extends Casino {
+  compact?: boolean;
 }
 
-const CasinoCard = ({ name, url, logo, banner, code, codeHelp, note, freeSpins }: CasinoCardProps) => {
+const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, compact }: CasinoCardProps) => {
   const [showDialog, setShowDialog] = useState(false);
 
   const handleConfirm = () => {
@@ -38,83 +32,71 @@ const CasinoCard = ({ name, url, logo, banner, code, codeHelp, note, freeSpins }
 
   return (
     <>
-      {banner ? (
-        /* Banner-style card for casinos with promotional images */
-        <div
-          onClick={() => setShowDialog(true)}
-          className="group relative rounded-2xl overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02] cursor-pointer"
-        >
-          <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-          {freeSpins && (
-            <div className="absolute top-3 right-3 z-20 bg-primary text-primary-foreground px-3 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg">
-              🎰 {freeSpins} Free Spins
-            </div>
-          )}
-          <img src={banner} alt={name} className="w-full h-auto object-cover" />
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/95 via-background/60 to-transparent p-4 pt-10">
-            <button
-              onClick={(e) => { e.stopPropagation(); setShowDialog(true); }}
-              className="btn-gold w-full py-3 px-6 rounded-xl font-bold text-primary-foreground uppercase tracking-wide text-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
-            >
-              Registar Agora
-            </button>
-          </div>
+      <div
+        onClick={() => setShowDialog(true)}
+        className="group relative card-elevated rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-500 cursor-pointer flex flex-col overflow-hidden h-full"
+      >
+        <div className="absolute inset-0 rounded-2xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+        {/* Image area - fixed aspect ratio */}
+        <div className="relative w-full aspect-[16/10] bg-secondary/30 flex items-center justify-center overflow-hidden">
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-full object-cover"
+          />
         </div>
-      ) : (
-        /* Original logo-style card */
-        <div 
-          onClick={() => setShowDialog(true)}
-          className="group relative card-elevated rounded-2xl p-8 border border-border/50 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02] cursor-pointer"
-        >
-          <div className="absolute inset-0 rounded-2xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          
-          <div className="relative z-10 flex flex-col items-center space-y-6">
-            <div className="w-32 h-32 rounded-xl bg-secondary/50 flex items-center justify-center border border-border/50 group-hover:border-primary/30 transition-colors duration-300 overflow-hidden">
-              {logo ? (
-                <img src={logo} alt={name} className="w-full h-full object-contain p-2" />
-              ) : (
-                <span className="text-2xl font-bold text-muted-foreground">{name.charAt(0)}</span>
+
+        {/* Info area */}
+        <div className="relative z-10 p-4 flex flex-col items-center gap-2 flex-1">
+          <h3 className="text-lg font-bold text-foreground">{name}</h3>
+
+          {highlight && (
+            <span className="text-xs font-extrabold uppercase tracking-wider text-primary bg-primary/10 px-3 py-1 rounded-full">
+              {highlight}
+            </span>
+          )}
+
+          {code && (
+            <div className="flex items-center gap-1.5">
+              <p className="text-sm text-primary font-medium">
+                Código: <span className="font-bold">{code}</span>
+              </p>
+              {codeHelp && (
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <HelpCircle className="w-4 h-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="top"
+                      className="max-w-xs bg-card border-border text-foreground p-3 text-xs leading-relaxed"
+                    >
+                      {codeHelp}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
             </div>
-            
-            <h3 className="text-xl font-semibold text-foreground">{name}</h3>
-            {code && (
-              <div className="flex items-center gap-1.5 -mt-4">
-                <p className="text-sm text-primary font-medium">
-                  Código: <span className="font-bold">{code}</span>
-                </p>
-                {codeHelp && (
-                  <TooltipProvider delayDuration={100}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button className="text-muted-foreground hover:text-primary transition-colors">
-                          <HelpCircle className="w-4 h-4" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent 
-                        side="top" 
-                        className="max-w-xs bg-card border-border text-foreground p-3 text-xs leading-relaxed"
-                      >
-                        {codeHelp}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </div>
-            )}
-            {note && (
-              <p className="text-xs text-muted-foreground -mt-3">{note}</p>
-            )}
-            
-            <button
-              onClick={() => setShowDialog(true)}
-              className="btn-gold w-full py-4 px-8 rounded-xl font-bold text-primary-foreground uppercase tracking-wide text-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
-            >
-              Jogar Agora
-            </button>
-          </div>
+          )}
+
+          {note && (
+            <p className="text-xs text-muted-foreground">{note}</p>
+          )}
+
+          <button
+            onClick={(e) => { e.stopPropagation(); setShowDialog(true); }}
+            className="btn-gold w-full py-3 px-6 rounded-xl font-bold text-primary-foreground uppercase tracking-wide text-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 mt-auto"
+          >
+            Jogar Agora
+          </button>
         </div>
-      )}
+      </div>
 
       {/* +18 Confirmation Dialog */}
       <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
