@@ -1,5 +1,5 @@
-import { Dices, Share2, HelpCircle, Mail, X, Trophy } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Dices, Share2, HelpCircle, Mail, X } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -10,7 +10,8 @@ const menuItems = [
   {
     title: "Casinos",
     icon: Dices,
-    href: "#casinos",
+    href: "/casinos",
+    isRoute: true,
   },
   {
     title: "Redes Sociais",
@@ -23,12 +24,6 @@ const menuItems = [
     href: "#contacto",
   },
   {
-    title: "BonusHunt",
-    icon: Trophy,
-    href: "/bonushunt",
-    isRoute: true,
-  },
-  {
     title: "Gambling Help",
     icon: HelpCircle,
     href: "https://www.jogoresponsavel.pt",
@@ -38,16 +33,24 @@ const menuItems = [
 
 const AppSidebar = ({ isOpen, onClose }: AppSidebarProps) => {
   const navigate = useNavigate();
-  
+  const location = useLocation();
+
   const handleClick = (href: string, external?: boolean, isRoute?: boolean) => {
     if (external) {
       window.open(href, "_blank", "noopener,noreferrer");
     } else if (isRoute) {
       navigate(href);
     } else {
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+      // If we're not on the home page, navigate there first
+      if (location.pathname !== "/") {
+        navigate("/");
+        setTimeout(() => {
+          const element = document.querySelector(href);
+          if (element) element.scrollIntoView({ behavior: "smooth" });
+        }, 300);
+      } else {
+        const element = document.querySelector(href);
+        if (element) element.scrollIntoView({ behavior: "smooth" });
       }
     }
     onClose();
@@ -71,7 +74,9 @@ const AppSidebar = ({ isOpen, onClose }: AppSidebarProps) => {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-xl font-bold text-gradient-gold">ZGON</h2>
+          <button onClick={() => { navigate("/"); onClose(); }}>
+            <h2 className="text-xl font-bold text-gradient-gold">ZGON</h2>
+          </button>
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-secondary/50 transition-colors"

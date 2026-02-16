@@ -1,52 +1,57 @@
-import { useRef } from "react";
+import { useRef, useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CasinoCard from "./CasinoCard";
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import stakeLogo from "@/assets/stake-logo.png";
-import flagmanLogo from "@/assets/flagman-logo.png";
-import lebullLogo from "@/assets/lebull-logo.png";
-import legzoBanner from "@/assets/legzo-banner.png";
-import flagmanBanner from "@/assets/flagman-banner.png";
-import oneGoBanner from "@/assets/1go-banner.png";
-
-const casinos = [
-  {
-    name: "Stake",
-    url: "https://stake.com/?c=r4QBeW03",
-    logo: stakeLogo,
-    code: "zgonstake",
-    codeHelp: "Esqueceste de inserir o código? Podes adicionar até 24h após o registo: Ícone de utilizador → Settings → Offers → Welcome Code",
-    note: "(Necessário VPN para aceder)",
-  },
-  {
-    name: "LeBull",
-    url: "https://www.lebull.pt/?partner=p71175p72532p7138&utm_source=aff&utm_medium=affiliate&utm_campaign=2026&utm_content=reg-page#registration",
-    logo: lebullLogo,
-  },
-  {
-    name: "Legzo",
-    url: "https://legzo133.casino/?stag=238310_699379f303fa62b2c7e3e647",
-    banner: legzoBanner,
-    freeSpins: 50,
-  },
-  {
-    name: "Flagman",
-    url: "https://casinoflagman27.com/registration?stag=238310_69937a810bc39d9889c93223&affb_id=97&al_id=546cf128de5df31eafb67fc98352820e&cmp=1325484&prm=250316&tr_src=streamer",
-    banner: flagmanBanner,
-    freeSpins: 50,
-  },
-  {
-    name: "1Go",
-    url: "https://1gocasino62.com/registration?stag=238310_69937a980bc39d9889c93260&affb_id=91&al_id=1e17b6c0b5f25a37a11a616f2d40d59d&cmp=1325487&prm=250319&tr_src=streamer&vredir=2",
-    banner: oneGoBanner,
-    freeSpins: 50,
-  },
-];
+import { casinos } from "@/data/casinos";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
 
 const CasinosSection = () => {
-  const autoplayPlugin = useRef(
-    Autoplay({ delay: 2500, stopOnInteraction: false, stopOnMouseEnter: true })
-  );
+  const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    align: "start",
+    dragFree: true,
+  });
+
+  // Continuous smooth scroll via requestAnimationFrame
+  const rafRef = useRef<number>();
+  const speedRef = useRef(0.5); // pixels per frame
+
+  const animate = useCallback(() => {
+    if (!emblaApi) return;
+    const engine = (emblaApi as any).internalEngine();
+    if (!engine) return;
+    engine.location.add(-speedRef.current);
+    engine.target.set(engine.location);
+    engine.scrollLooper.loop(-1);
+    engine.slideLooper.loop();
+    engine.translate.to(engine.location);
+    rafRef.current = requestAnimationFrame(animate);
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    if (!isHovered) {
+      rafRef.current = requestAnimationFrame(animate);
+    }
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [emblaApi, isHovered, animate]);
+
+  const handleMouseEnter = useCallback(() => {
+    setIsHovered(true);
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovered(false);
+  }, []);
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   return (
     <section id="casinos" className="py-20 px-4">
@@ -61,36 +66,50 @@ const CasinosSection = () => {
           </p>
         </div>
 
-        {/* Casino cards carousel */}
-        <div className="max-w-5xl mx-auto px-12">
-          <Carousel
-            opts={{ align: "start", loop: true }}
-            plugins={[autoplayPlugin.current]}
-            className="w-full"
+        {/* Carousel */}
+        <div className="relative max-w-5xl mx-auto group/carousel">
+          {/* Arrows */}
+          <button
+            onClick={scrollPrev}
+            className="absolute -left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border border-border bg-card text-foreground flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors opacity-0 group-hover/carousel:opacity-100"
           >
-            <CarouselContent className="-ml-4">
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={scrollNext}
+            className="absolute -right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border border-border bg-card text-foreground flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors opacity-0 group-hover/carousel:opacity-100"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          <div
+            ref={emblaRef}
+            className="overflow-hidden"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="flex gap-6">
               {casinos.map((casino) => (
-                <CarouselItem key={casino.name} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                  <div className="transition-transform duration-300 hover:scale-105">
-                    <CasinoCard
-                      name={casino.name}
-                      url={casino.url}
-                      logo={(casino as any).logo}
-                      banner={(casino as any).banner}
-                      code={(casino as any).code}
-                      codeHelp={(casino as any).codeHelp}
-                      note={(casino as any).note}
-                      freeSpins={(casino as any).freeSpins}
-                    />
-                  </div>
-                </CarouselItem>
+                <div
+                  key={casino.name}
+                  className="flex-[0_0_280px] min-w-0 transition-transform duration-300 hover:scale-105"
+                >
+                  <CasinoCard {...casino} />
+                </div>
               ))}
-            </CarouselContent>
-            <CarouselPrevious className="border-border bg-card text-foreground hover:bg-primary hover:text-primary-foreground" />
-            <CarouselNext className="border-border bg-card text-foreground hover:bg-primary hover:text-primary-foreground" />
-          </Carousel>
+            </div>
+          </div>
         </div>
 
+        {/* Ver todos link */}
+        <div className="text-center mt-10">
+          <button
+            onClick={() => navigate("/casinos")}
+            className="text-primary hover:text-primary/80 font-semibold text-sm uppercase tracking-wider transition-colors"
+          >
+            Ver todos os casinos →
+          </button>
+        </div>
       </div>
     </section>
   );
