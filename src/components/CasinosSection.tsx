@@ -1,4 +1,5 @@
 import CasinoCard from "./CasinoCard";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import stakeLogo from "@/assets/stake-logo.png";
 import flagmanLogo from "@/assets/flagman-logo.png";
 import lebullLogo from "@/assets/lebull-logo.png";
@@ -54,26 +55,28 @@ const CasinosSection = () => {
           </p>
         </div>
 
-        {/* Casino cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {casinos.map((casino, index) => (
-            <div
-              key={casino.name}
-              className="animate-fadeIn"
-              style={{ animationDelay: `${index * 0.15}s` }}
-            >
-              <CasinoCard
-                name={casino.name}
-                url={casino.url}
-                logo={(casino as any).logo}
-                banner={(casino as any).banner}
-                code={(casino as any).code}
-                codeHelp={(casino as any).codeHelp}
-                note={(casino as any).note}
-                freeSpins={(casino as any).freeSpins}
-              />
-            </div>
-          ))}
+        {/* Casino cards carousel */}
+        <div className="max-w-5xl mx-auto px-12">
+          <Carousel opts={{ align: "start", loop: true }} className="w-full">
+            <CarouselContent className="-ml-4">
+              {casinos.map((casino) => (
+                <CarouselItem key={casino.name} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
+                  <CasinoCard
+                    name={casino.name}
+                    url={casino.url}
+                    logo={(casino as any).logo}
+                    banner={(casino as any).banner}
+                    code={(casino as any).code}
+                    codeHelp={(casino as any).codeHelp}
+                    note={(casino as any).note}
+                    freeSpins={(casino as any).freeSpins}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="border-border bg-card text-foreground hover:bg-primary hover:text-primary-foreground" />
+            <CarouselNext className="border-border bg-card text-foreground hover:bg-primary hover:text-primary-foreground" />
+          </Carousel>
         </div>
 
       </div>
