@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import CasinoCard from "@/components/CasinoCard";
@@ -8,10 +8,24 @@ import AppSidebar from "@/components/AppSidebar";
 import SidebarTrigger from "@/components/SidebarTrigger";
 import Footer from "@/components/Footer";
 
+function getNextWednesday18h(): Date {
+  const now = new Date();
+  const target = new Date(now);
+  const day = target.getUTCDay();
+  const daysUntilWed = (3 - day + 7) % 7 || 7;
+  target.setUTCDate(target.getUTCDate() + daysUntilWed);
+  target.setUTCHours(18, 0, 0, 0);
+  if (target <= now) target.setUTCDate(target.getUTCDate() + 7);
+  return target;
+}
+import AppSidebar from "@/components/AppSidebar";
+import SidebarTrigger from "@/components/SidebarTrigger";
+import Footer from "@/components/Footer";
+
 const Casinos = () => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const revealDate = useMemo(() => getNextWednesday18h(), []);
   return (
     <div className="min-h-screen bg-background">
       <SidebarTrigger onClick={() => setSidebarOpen(true)} />
@@ -46,15 +60,18 @@ const Casinos = () => {
       {/* Casino grid */}
       <main className="px-4 pb-20">
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {casinos.map((casino, index) => (
-            <div
-              key={casino.name}
-              className="animate-fade-in transition-transform duration-300 hover:scale-105"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <CasinoCard {...casino} />
-            </div>
-          ))}
+          {casinos.map((casino, index) => {
+            const isComingSoon = index >= casinos.length - 3;
+            return (
+              <div
+                key={casino.name}
+                className="animate-fade-in transition-transform duration-300 hover:scale-105"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <CasinoCard {...casino} comingSoon={isComingSoon} revealDate={revealDate} />
+              </div>
+            );
+          })}
         </div>
       </main>
 

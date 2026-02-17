@@ -1,9 +1,21 @@
-import { useRef, useCallback, useEffect, useState } from "react";
+import { useRef, useCallback, useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import CasinoCard from "./CasinoCard";
 import { casinos } from "@/data/casinos";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
+
+// Next Wednesday at 18:00 (Portugal time, UTC+0)
+function getNextWednesday18h(): Date {
+  const now = new Date();
+  const target = new Date(now);
+  const day = target.getUTCDay();
+  const daysUntilWed = (3 - day + 7) % 7 || 7;
+  target.setUTCDate(target.getUTCDate() + daysUntilWed);
+  target.setUTCHours(18, 0, 0, 0);
+  if (target <= now) target.setUTCDate(target.getUTCDate() + 7);
+  return target;
+}
 
 const CasinosSection = () => {
   const navigate = useNavigate();
@@ -65,8 +77,9 @@ const CasinosSection = () => {
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
+  const revealDate = useMemo(() => getNextWednesday18h(), []);
+
   return (
-    <section id="casinos" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-16 space-y-4">
@@ -101,14 +114,17 @@ const CasinosSection = () => {
             onMouseLeave={handleMouseLeave}
           >
             <div className="flex gap-6">
-              {casinos.map((casino) => (
-                <div
-                  key={casino.name}
-                  className="flex-[0_0_280px] min-w-0 transition-transform duration-300 hover:scale-105"
-                >
-                  <CasinoCard {...casino} />
-                </div>
-              ))}
+              {casinos.map((casino, index) => {
+                const isComingSoon = index >= casinos.length - 3;
+                return (
+                  <div
+                    key={casino.name}
+                    className="flex-[0_0_280px] min-w-0 transition-transform duration-300 hover:scale-105"
+                  >
+                    <CasinoCard {...casino} comingSoon={isComingSoon} revealDate={revealDate} />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

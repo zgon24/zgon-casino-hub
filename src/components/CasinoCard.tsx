@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Lock } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,13 +17,18 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { Casino } from "@/data/casinos";
+import { useCountdown } from "@/hooks/useCountdown";
 
 interface CasinoCardProps extends Casino {
   compact?: boolean;
+  comingSoon?: boolean;
+  revealDate?: Date;
 }
 
-const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, compact }: CasinoCardProps) => {
+const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, compact, comingSoon, revealDate }: CasinoCardProps) => {
   const [showDialog, setShowDialog] = useState(false);
+  const countdown = useCountdown(revealDate ?? new Date());
+  const isLocked = comingSoon && !countdown.isExpired;
 
   const handleConfirm = () => {
     window.open(url, "_blank", "noopener,noreferrer");
@@ -33,10 +38,38 @@ const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, compact
   return (
     <>
       <div
-        onClick={() => setShowDialog(true)}
-        className="group relative card-elevated rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-500 cursor-pointer flex flex-col overflow-hidden h-full"
+        onClick={() => !isLocked && setShowDialog(true)}
+        className={`group relative card-elevated rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-500 flex flex-col overflow-hidden h-full ${isLocked ? 'cursor-default' : 'cursor-pointer'}`}
       >
         <div className="absolute inset-0 rounded-2xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+        {/* Coming Soon Overlay */}
+        {isLocked && (
+          <div className="absolute inset-0 z-30 rounded-2xl bg-background/85 backdrop-blur-md flex flex-col items-center justify-center gap-3 p-4">
+            <Lock className="w-8 h-8 text-primary" />
+            <p className="text-sm font-bold text-foreground uppercase tracking-wider">Disponível em</p>
+            <div className="flex gap-2 text-center">
+              {countdown.days > 0 && (
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl font-black text-primary">{countdown.days}</span>
+                  <span className="text-[10px] text-muted-foreground uppercase">dias</span>
+                </div>
+              )}
+              <div className="flex flex-col items-center">
+                <span className="text-2xl font-black text-primary">{String(countdown.hours).padStart(2, '0')}</span>
+                <span className="text-[10px] text-muted-foreground uppercase">horas</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="text-2xl font-black text-primary">{String(countdown.minutes).padStart(2, '0')}</span>
+                <span className="text-[10px] text-muted-foreground uppercase">min</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="text-2xl font-black text-primary">{String(countdown.seconds).padStart(2, '0')}</span>
+                <span className="text-[10px] text-muted-foreground uppercase">seg</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Image area - fixed aspect ratio */}
         <div className="relative w-full aspect-[16/10] bg-secondary/30 flex items-center justify-center overflow-hidden">
