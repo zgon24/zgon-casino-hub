@@ -25,7 +25,7 @@ interface CasinoCardProps extends Casino {
   revealDate?: Date;
 }
 
-const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, compact, comingSoon, revealDate }: CasinoCardProps) => {
+const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, bonusDetails, compact, comingSoon, revealDate }: CasinoCardProps) => {
   const [showDialog, setShowDialog] = useState(false);
   const countdown = useCountdown(revealDate ?? new Date());
   const isLocked = comingSoon && !countdown.isExpired;
@@ -115,6 +115,14 @@ const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, compact
                   </Tooltip>
                 </TooltipProvider>
               )}
+            </div>
+          )}
+
+          {bonusDetails && bonusDetails.length > 0 && (
+            <div className="w-full bg-secondary/40 rounded-lg p-2.5 space-y-1">
+              {bonusDetails.map((detail, i) => (
+                <p key={i} className="text-[11px] text-muted-foreground leading-tight">{detail}</p>
+              ))}
             </div>
           )}
 

@@ -4,6 +4,7 @@ import lebullLogo from "@/assets/lebull-logo.png";
 import legzoBanner from "@/assets/legzo-banner.png";
 import flagmanBanner from "@/assets/flagman-banner.png";
 import oneGoBanner from "@/assets/1go-banner.png";
+import leonBanner from "@/assets/leon-banner.png";
 
 export interface Casino {
   name: string;
@@ -14,6 +15,7 @@ export interface Casino {
   note?: string;
   freeSpins?: number;
   highlight?: string;
+  bonusDetails?: string[];
 }
 
 export const casinos: Casino[] = [
@@ -31,6 +33,18 @@ export const casinos: Casino[] = [
     url: "https://www.lebull.pt/?partner=p71175p72532p7138&utm_source=aff&utm_medium=affiliate&utm_campaign=2026&utm_content=reg-page#registration",
     image: lebullLogo,
     highlight: "Casino PT licenciado",
+  },
+  {
+    name: "Leon",
+    url: "https://i64cl3er5t.com/?serial=57481&creative_id=222&anid=",
+    image: leonBanner,
+    highlight: "🎁 100% até 1 000€ + 30 FS",
+    bonusDetails: [
+      "Bónus: 100% até 1 000€ + 30 Free Spins",
+      "Slot: Gates of Olympus (Pragmatic Play)",
+      "Bet: 0,20€ · Dep. mín: 10€",
+      "Wager: x35 (bónus) · x20 (FS)",
+    ],
   },
   {
     name: "Legzo",
