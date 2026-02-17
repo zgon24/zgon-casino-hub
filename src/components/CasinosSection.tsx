@@ -17,7 +17,7 @@ const CasinosSection = () => {
 
   // Continuous smooth scroll via requestAnimationFrame
   const rafRef = useRef<number>();
-  const speedRef = useRef(0.5); // pixels per frame
+  const speedRef = useRef(0.8); // pixels per frame
 
   const animate = useCallback(() => {
     if (!emblaApi) return;
@@ -31,15 +31,27 @@ const CasinosSection = () => {
     rafRef.current = requestAnimationFrame(animate);
   }, [emblaApi]);
 
+  const startAutoScroll = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(animate);
+  }, [animate]);
+
+  const stopAutoScroll = useCallback(() => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = undefined;
+    }
+  }, []);
+
   useEffect(() => {
     if (!emblaApi) return;
     if (!isHovered) {
-      rafRef.current = requestAnimationFrame(animate);
+      startAutoScroll();
+    } else {
+      stopAutoScroll();
     }
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [emblaApi, isHovered, animate]);
+    return () => stopAutoScroll();
+  }, [emblaApi, isHovered, startAutoScroll, stopAutoScroll]);
 
   const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
