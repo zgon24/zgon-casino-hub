@@ -37,6 +37,7 @@ export const casinos: Casino[] = [
     url: "https://legzo133.casino/?stag=238310_699379f303fa62b2c7e3e647",
     image: legzoBanner,
     freeSpins: 50,
+    code: "ZGONWIN",
     highlight: "🎰 50 Free Spins",
   },
   {
@@ -44,6 +45,7 @@ export const casinos: Casino[] = [
     url: "https://casinoflagman27.com/registration?stag=238310_69937a810bc39d9889c93223&affb_id=97&al_id=546cf128de5df31eafb67fc98352820e&cmp=1325484&prm=250316&tr_src=streamer",
     image: flagmanBanner,
     freeSpins: 50,
+    code: "ZGONWIN",
     highlight: "🎰 50 Free Spins",
   },
   {
@@ -51,6 +53,7 @@ export const casinos: Casino[] = [
     url: "https://1gocasino62.com/registration?stag=238310_69937a980bc39d9889c93260&affb_id=91&al_id=1e17b6c0b5f25a37a11a616f2d40d59d&cmp=1325487&prm=250319&tr_src=streamer&vredir=2",
     image: oneGoBanner,
     freeSpins: 50,
+    code: "ZGONWIN",
     highlight: "🎰 50 Free Spins",
   },
 ];
