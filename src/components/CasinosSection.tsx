@@ -80,6 +80,7 @@ const CasinosSection = () => {
   const revealDate = useMemo(() => getNextWednesday18h(), []);
 
   return (
+    <section className="py-20 px-6">
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-16 space-y-4">

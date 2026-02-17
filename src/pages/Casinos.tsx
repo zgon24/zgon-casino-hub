@@ -18,9 +18,6 @@ function getNextWednesday18h(): Date {
   if (target <= now) target.setUTCDate(target.getUTCDate() + 7);
   return target;
 }
-import AppSidebar from "@/components/AppSidebar";
-import SidebarTrigger from "@/components/SidebarTrigger";
-import Footer from "@/components/Footer";
 
 const Casinos = () => {
   const navigate = useNavigate();
