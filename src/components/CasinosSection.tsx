@@ -1,9 +1,10 @@
-import { useRef, useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useMemo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CasinoCard from "./CasinoCard";
 import { casinos } from "@/data/casinos";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 // Next Wednesday at 18:00 (Portugal time, UTC+0)
 function getNextWednesday18h(): Date {
@@ -17,65 +18,45 @@ function getNextWednesday18h(): Date {
   return target;
 }
 
+const autoplayPlugin = Autoplay({
+  delay: 2500,
+  stopOnInteraction: false,
+  stopOnMouseEnter: false,
+});
+
 const CasinosSection = () => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: "start",
-    dragFree: true,
-  });
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start", dragFree: true },
+    [autoplayPlugin]
+  );
 
-  // Continuous smooth scroll via requestAnimationFrame
-  const rafRef = useRef<number>();
-  const speedRef = useRef(0.8); // pixels per frame
-
-  const animate = useCallback(() => {
-    if (!emblaApi) return;
-    const engine = (emblaApi as any).internalEngine();
-    if (!engine) return;
-    engine.location.add(-speedRef.current);
-    engine.target.set(engine.location);
-    engine.scrollLooper.loop(-1);
-    engine.slideLooper.loop();
-    engine.translate.to(engine.location);
-    rafRef.current = requestAnimationFrame(animate);
+  const scrollPrev = useCallback(() => {
+    emblaApi?.scrollPrev();
   }, [emblaApi]);
 
-  const startAutoScroll = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(animate);
-  }, [animate]);
-
-  const stopAutoScroll = useCallback(() => {
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = undefined;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    if (!isHovered) {
-      startAutoScroll();
-    } else {
-      stopAutoScroll();
-    }
-    return () => stopAutoScroll();
-  }, [emblaApi, isHovered, startAutoScroll, stopAutoScroll]);
+  const scrollNext = useCallback(() => {
+    emblaApi?.scrollNext();
+  }, [emblaApi]);
 
   const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    autoplayPlugin.stop();
   }, []);
 
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
+    autoplayPlugin.play();
   }, []);
 
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+  // Ensure autoplay starts when API is ready
+  useEffect(() => {
+    if (emblaApi) {
+      autoplayPlugin.play();
+    }
+  }, [emblaApi]);
 
   const revealDate = useMemo(() => getNextWednesday18h(), []);
 
