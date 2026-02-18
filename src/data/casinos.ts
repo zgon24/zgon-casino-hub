@@ -54,8 +54,12 @@ export const casinos: Casino[] = [
     url: "https://ezz.casino?invite=zgonwin",
     image: ezzLogo,
     code: "zgonwin",
-    highlight: "🎰 Código exclusivo ZGON",
+    highlight: "💰 350% até 2 000$",
     badge: "TOP PICK",
+    bonusDetails: [
+      "Bónus de Boas-Vindas: 350% até 2 000$",
+      "Código exclusivo: zgonwin",
+    ],
   },
   {
     name: "Legzo",
