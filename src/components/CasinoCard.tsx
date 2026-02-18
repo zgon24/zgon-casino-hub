@@ -25,7 +25,7 @@ interface CasinoCardProps extends Casino {
   revealDate?: Date;
 }
 
-const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, bonusDetails, compact, comingSoon, revealDate }: CasinoCardProps) => {
+const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, badge, bonusDetails, compact, comingSoon, revealDate }: CasinoCardProps) => {
   const [showDialog, setShowDialog] = useState(false);
   const countdown = useCountdown(revealDate ?? new Date());
   const isLocked = comingSoon && !countdown.isExpired;
@@ -39,8 +39,15 @@ const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, bonusDe
     <>
       <div
         onClick={() => !isLocked && setShowDialog(true)}
-        className={`group relative card-elevated rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-500 flex flex-col overflow-hidden h-full ${isLocked ? 'cursor-default' : 'cursor-pointer'}`}
+        className={`group relative card-elevated rounded-2xl border transition-all duration-500 flex flex-col overflow-hidden h-full ${badge ? 'border-primary shadow-lg shadow-primary/20' : 'border-border/50 hover:border-primary/30'} ${isLocked ? 'cursor-default' : 'cursor-pointer'}`}
       >
+        {/* Best offer badge */}
+        {badge && (
+          <div className="absolute top-3 right-3 z-20 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full shadow-md animate-pulse">
+            ⭐ {badge}
+          </div>
+        )}
+
         <div className="absolute inset-0 rounded-2xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         {/* Coming Soon Overlay */}
