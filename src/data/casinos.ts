@@ -5,6 +5,7 @@ import legzoBanner from "@/assets/legzo-banner.png";
 import flagmanBanner from "@/assets/flagman-banner.png";
 import oneGoBanner from "@/assets/1go-banner.png";
 import leonBanner from "@/assets/leon-banner.png";
+import ezzLogo from "@/assets/ezz-logo.png";
 
 export interface Casino {
   name: string;
@@ -45,6 +46,13 @@ export const casinos: Casino[] = [
       "Bet: 0,20€ · Dep. mín: 10€",
       "Wager: x35 (bónus) · x20 (FS)",
     ],
+  },
+  {
+    name: "EZZ Casino",
+    url: "https://ezz.casino?invite=zgonwin",
+    image: ezzLogo,
+    code: "zgonwin",
+    highlight: "🎰 Código exclusivo ZGON",
   },
   {
     name: "Legzo",
