@@ -16,6 +16,7 @@ export interface Casino {
   note?: string;
   freeSpins?: number;
   highlight?: string;
+  badge?: string;
   bonusDetails?: string[];
 }
 
@@ -40,6 +41,7 @@ export const casinos: Casino[] = [
     url: "https://i64cl3er5t.com/?serial=57481&creative_id=222&anid=",
     image: leonBanner,
     highlight: "🎁 100% até 1 000€ + 30 FS",
+    badge: "MELHOR OFERTA",
     bonusDetails: [
       "Bónus: 100% até 1 000€ + 30 Free Spins",
       "Slot: Gates of Olympus (Pragmatic Play)",
@@ -53,6 +55,7 @@ export const casinos: Casino[] = [
     image: ezzLogo,
     code: "zgonwin",
     highlight: "🎰 Código exclusivo ZGON",
+    badge: "TOP PICK",
   },
   {
     name: "Legzo",
