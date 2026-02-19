@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import CasinosSection from "@/components/CasinosSection";
+import TwitchSection from "@/components/TwitchSection";
 import SocialLinks from "@/components/SocialLinks";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
@@ -17,6 +18,7 @@ const Index = () => {
       
       <Header />
       <CasinosSection />
+      <TwitchSection />
       <SocialLinks />
       <ContactSection />
       <Footer />
@@ -25,3 +27,4 @@ const Index = () => {
 };
 
 export default Index;
+
