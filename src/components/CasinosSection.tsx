@@ -102,17 +102,14 @@ const CasinosSection = () => {
             onMouseLeave={handleMouseLeave}
           >
             <div className="flex gap-6">
-              {casinos.map((casino, index) => {
-                const isComingSoon = index >= casinos.length - 3;
-                return (
-                  <div
-                    key={casino.name}
-                    className="flex-[0_0_280px] min-w-0 transition-transform duration-300 hover:scale-105"
-                  >
-                    <CasinoCard {...casino} comingSoon={isComingSoon} revealDate={revealDate} />
-                  </div>
-                );
-              })}
+              {casinos.map((casino) => (
+                <div
+                  key={casino.name}
+                  className="flex-[0_0_280px] min-w-0 transition-transform duration-300 hover:scale-105"
+                >
+                  <CasinoCard {...casino} />
+                </div>
+              ))}
             </div>
           </div>
         </div>

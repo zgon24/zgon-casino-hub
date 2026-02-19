@@ -57,18 +57,15 @@ const Casinos = () => {
       {/* Casino grid */}
       <main className="px-4 pb-20">
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {casinos.map((casino, index) => {
-            const isComingSoon = index >= casinos.length - 3;
-            return (
-              <div
-                key={casino.name}
-                className="animate-fade-in transition-transform duration-300 hover:scale-105"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <CasinoCard {...casino} comingSoon={isComingSoon} revealDate={revealDate} />
-              </div>
-            );
-          })}
+          {casinos.map((casino, index) => (
+            <div
+              key={casino.name}
+              className="animate-fade-in transition-transform duration-300 hover:scale-105"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <CasinoCard {...casino} />
+            </div>
+          ))}
         </div>
       </main>
 
