@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
-import { Tv, ExternalLink } from "lucide-react";
+import { Tv, ExternalLink, Play } from "lucide-react";
+import streamOfflineImg from "@/assets/stream-offline.png";
 
 const CHANNEL = "zgon__24";
 const TWITCH_URL = "https://www.twitch.tv/zgon__24";
 
 const TwitchSection = () => {
   const [parentDomain, setParentDomain] = useState("");
+  const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
     setParentDomain(window.location.hostname);
   }, []);
 
   const embedUrl = parentDomain
-    ? `https://player.twitch.tv/?channel=${CHANNEL}&parent=${parentDomain}&autoplay=false`
+    ? `https://player.twitch.tv/?channel=${CHANNEL}&parent=${parentDomain}&autoplay=true`
     : null;
 
   return (
@@ -34,18 +36,18 @@ const TwitchSection = () => {
           </p>
         </div>
 
-        {/* Twitch embed */}
+        {/* Player container */}
         <div className="relative max-w-4xl mx-auto rounded-2xl overflow-hidden border border-border/50 shadow-2xl shadow-black/40">
-          {/* Purple glow behind */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/30 via-primary/20 to-purple-600/30 rounded-2xl blur-lg" />
+          {/* Glow behind */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/30 via-primary/20 to-purple-600/30 rounded-2xl blur-lg pointer-events-none" />
 
           <div className="relative bg-card rounded-2xl overflow-hidden">
             {/* Title bar */}
-            <div className="flex items-center justify-between px-4 py-3 bg-[#18181b] border-b border-border/30">
+            <div className="flex items-center justify-between px-4 py-3 bg-zinc-900 border-b border-border/30">
               <div className="flex items-center gap-2">
                 <div className="flex gap-1.5">
                   <span className="w-3 h-3 rounded-full bg-red-500" />
-                  <span className="w-3 h-3 rounded-full bg-yellow-500" />
+                  <span className="w-3 h-3 rounded-full bg-yellow-400" />
                   <span className="w-3 h-3 rounded-full bg-green-500" />
                 </div>
                 <span className="text-xs text-muted-foreground ml-2 font-mono">
@@ -63,9 +65,9 @@ const TwitchSection = () => {
               </a>
             </div>
 
-            {/* Player */}
+            {/* Player / Offline image */}
             <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-              {embedUrl ? (
+              {showPlayer && embedUrl ? (
                 <iframe
                   src={embedUrl}
                   className="absolute inset-0 w-full h-full"
@@ -73,16 +75,30 @@ const TwitchSection = () => {
                   title={`${CHANNEL} Twitch Stream`}
                 />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#18181b]">
-                  <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+                <div className="absolute inset-0">
+                  <img
+                    src={streamOfflineImg}
+                    alt="Stream Offline"
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Play overlay */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/30">
+                    <button
+                      onClick={() => setShowPlayer(true)}
+                      className="flex items-center gap-3 bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-bold px-8 py-4 rounded-full text-lg transition-all shadow-2xl shadow-purple-900/60"
+                    >
+                      <Play className="w-6 h-6 fill-white" />
+                      Ver Stream
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Chat (optional strip) */}
-            <div className="px-4 py-3 bg-[#18181b] border-t border-border/30 flex items-center justify-between">
+            {/* Footer bar */}
+            <div className="px-4 py-3 bg-zinc-900 border-t border-border/30 flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
-                🎮 Se não estiver em live, o player mostrará o estado offline.
+                🎮 Slots, bonus hunts e muito mais — ao vivo!
               </p>
               <a
                 href={TWITCH_URL}
