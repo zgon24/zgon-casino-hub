@@ -6,6 +6,7 @@ import flagmanBanner from "@/assets/flagman-banner.png";
 import oneGoBanner from "@/assets/1go-banner.png";
 import leonBanner from "@/assets/leon-banner.png";
 import ezzLogo from "@/assets/ezz-logo.png";
+import solBanner from "@/assets/sol-banner.png";
 
 export interface Casino {
   name: string;
@@ -60,6 +61,14 @@ export const casinos: Casino[] = [
       "Bónus de Boas-Vindas: 350% até 2 000$",
       "Código exclusivo: zgonwin",
     ],
+  },
+  {
+    name: "Sol Casino",
+    url: "https://sol-blsm10.com/ca029030a",
+    image: solBanner,
+    freeSpins: 50,
+    code: "ZGONWIN",
+    highlight: "🎰 50 Free Spins",
   },
   {
     name: "Legzo",
