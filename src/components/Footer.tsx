@@ -30,6 +30,26 @@ const Footer = () => {
           O jogo pode causar dependência. Jogue com responsabilidade e dentro das suas possibilidades.
         </p>
       </div>
+
+      {/* Legal disclaimer */}
+      <div className="max-w-3xl mx-auto mt-10 px-4">
+        <div className="border border-border/30 rounded-xl bg-card/50 backdrop-blur-sm p-6 space-y-4">
+          <h4 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground/70 text-center">
+            Aviso Legal
+          </h4>
+          <div className="space-y-3 text-xs leading-relaxed text-muted-foreground/60 text-center">
+            <p>
+              O registo em qualquer uma das marcas divulgadas é uma escolha individual e da total responsabilidade de cada utilizador. A comunidade ZGON tem uma presença internacional, pelo que algumas das marcas apresentadas poderão não estar autorizadas ou regulamentadas no país de residência do utilizador.
+            </p>
+            <p>
+              Aconselhamos a consulta cuidadosa dos respetivos termos e condições, sendo que a utilização de qualquer plataforma pressupõe a aceitação integral das suas regras.
+            </p>
+            <p>
+              Todas as entidades mencionadas destinam-se exclusivamente a maiores de 18 anos. A equipa ZGON declina qualquer responsabilidade por qualquer incumprimento do disposto acima.
+            </p>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 };
