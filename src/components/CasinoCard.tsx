@@ -25,7 +25,7 @@ interface CasinoCardProps extends Casino {
   revealDate?: Date;
 }
 
-const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, badge, bonusDetails, compact, comingSoon, revealDate }: CasinoCardProps) => {
+const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, badge, bonusDetails, compact, comingSoon, revealDate, freeSpinsHelp }: CasinoCardProps) => {
   const [showDialog, setShowDialog] = useState(false);
   const countdown = useCountdown(revealDate ?? new Date());
   const isLocked = comingSoon && !countdown.isExpired;
@@ -92,9 +92,31 @@ const CasinoCard = ({ name, url, image, code, codeHelp, note, highlight, badge, 
           <h3 className="text-lg font-bold text-foreground">{name}</h3>
 
           {highlight && (
-            <span className="text-xs font-extrabold uppercase tracking-wider text-primary bg-primary/10 px-3 py-1 rounded-full">
-              {highlight}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-primary bg-primary/10 px-3 py-1 rounded-full">
+                {highlight}
+              </span>
+              {freeSpinsHelp && (
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <HelpCircle className="w-4 h-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="top"
+                      className="max-w-xs bg-card border-border text-foreground p-3 text-xs leading-relaxed"
+                    >
+                      {freeSpinsHelp}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
           )}
 
           {code && (

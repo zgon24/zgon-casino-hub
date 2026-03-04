@@ -16,6 +16,7 @@ export interface Casino {
   codeHelp?: string;
   note?: string;
   freeSpins?: number;
+  freeSpinsHelp?: string;
   highlight?: string;
   badge?: string;
   bonusDetails?: string[];
@@ -69,6 +70,7 @@ export const casinos: Casino[] = [
     freeSpins: 50,
     code: "ZGONWIN",
     highlight: "🎰 50 Free Spins",
+    freeSpinsHelp: "🎰 Joga as tuas 50 Free Spins em: Doors Of Sol (BGaming)",
   },
   {
     name: "Legzo",
@@ -77,6 +79,7 @@ export const casinos: Casino[] = [
     freeSpins: 50,
     code: "ZGONWIN",
     highlight: "🎰 50 Free Spins",
+    freeSpinsHelp: "🎰 Joga as tuas 50 Free Spins em: The Dog House, Cleocatra, Gates of Olympus (Pragmatic Play) · Book of Cats (BGaming)",
   },
   {
     name: "Flagman",
@@ -85,6 +88,7 @@ export const casinos: Casino[] = [
     freeSpins: 50,
     code: "ZGONWIN",
     highlight: "🎰 50 Free Spins",
+    freeSpinsHelp: "🎰 Joga as tuas 50 Free Spins em: Gates of Universe, The Dog House, Cleocatra, Gates of Olympus, Gates of Olympus 1000, Sugar Rush 1000, Sweet Bonanza 1000 (Pragmatic Play) · Book of Cats (BGaming)",
   },
   {
     name: "1Go",
@@ -93,5 +97,6 @@ export const casinos: Casino[] = [
     freeSpins: 50,
     code: "ZGONWIN",
     highlight: "🎰 50 Free Spins",
+    freeSpinsHelp: "🎰 Joga as tuas 50 Free Spins em: The Dog House, Cleocatra, Gates of Olympus (Pragmatic Play) · Book of Cats (BGaming)",
   },
 ];
