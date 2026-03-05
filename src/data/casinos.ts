@@ -5,7 +5,7 @@ import legzoBanner from "@/assets/legzo-banner.png";
 import flagmanBanner from "@/assets/flagman-banner.png";
 import oneGoBanner from "@/assets/1go-banner.png";
 import leonBanner from "@/assets/leon-banner.png";
-import ezzLogo from "@/assets/ezz-logo.png";
+
 import solBanner from "@/assets/sol-banner.png";
 
 export interface Casino {
@@ -49,18 +49,6 @@ export const casinos: Casino[] = [
       "Slot: Gates of Olympus (Pragmatic Play)",
       "Bet: 0,20€ · Dep. mín: 10€",
       "Wager: x35 (bónus) · x20 (FS)",
-    ],
-  },
-  {
-    name: "EZZ Casino",
-    url: "https://ezz.casino?invite=zgonwin",
-    image: ezzLogo,
-    code: "zgonwin",
-    highlight: "💰 350% até 2 000$",
-    badge: "TOP PICK",
-    bonusDetails: [
-      "Bónus de Boas-Vindas: 350% até 2 000$",
-      "Código exclusivo: zgonwin",
     ],
   },
   {
