@@ -10,6 +10,7 @@ import Casinos from "./pages/Casinos";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Shop from "./pages/Shop";
 
 const queryClient = new QueryClient();
 
