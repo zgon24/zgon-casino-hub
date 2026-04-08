@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     const allChatters: string[] = [];
     let cursor: string | undefined;
     do {
-      const url = new URL(`${GATEWAY_URL}/helix/chat/chatters`);
+      const url = new URL(`${GATEWAY_URL}/chat/chatters`);
       url.searchParams.set("broadcaster_id", broadcasterId);
       url.searchParams.set("moderator_id", broadcasterId);
       url.searchParams.set("first", "1000");
