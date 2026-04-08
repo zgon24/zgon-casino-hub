@@ -14,6 +14,12 @@ const menuItems = [
     isRoute: true,
   },
   {
+    title: "Loja de Pontos",
+    icon: ShoppingBag,
+    href: "/shop",
+    isRoute: true,
+  },
+  {
     title: "Redes Sociais",
     icon: Share2,
     href: "#redes-sociais",
