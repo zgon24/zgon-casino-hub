@@ -155,7 +155,7 @@ const Shop = () => {
                   ) : (
                     <button
                       onClick={() => setEditingTwitch(true)}
-                      className="text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
+                      className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                     >
                       {twitchUsername ? `@${twitchUsername}` : "Ligar conta →"}
                     </button>
