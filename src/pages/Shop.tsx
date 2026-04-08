@@ -145,7 +145,7 @@ const Shop = () => {
                         placeholder="o_teu_username"
                         className="bg-background border border-border rounded-lg px-3 py-1 text-sm text-foreground w-40"
                       />
-                      <button onClick={saveTwitchUsername} className="text-xs bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded-lg transition-colors">
+                      <button onClick={saveTwitchUsername} className="text-xs bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-1 rounded-lg transition-colors">
                         Guardar
                       </button>
                       <button onClick={() => setEditingTwitch(false)} className="text-xs text-muted-foreground hover:text-foreground">
