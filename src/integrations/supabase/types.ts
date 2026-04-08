@@ -53,12 +53,40 @@ export type Database = {
         }
         Relationships: []
       }
+      point_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          reason: string
+          source: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          reason?: string
+          source?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          reason?: string
+          source?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string
           display_name: string | null
           id: string
+          twitch_username: string | null
           updated_at: string
           user_id: string
         }
@@ -67,6 +95,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          twitch_username?: string | null
           updated_at?: string
           user_id: string
         }
@@ -75,8 +104,86 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          twitch_username?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      redemptions: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          points_spent: number
+          shop_item_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          points_spent: number
+          shop_item_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          points_spent?: number
+          shop_item_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "redemptions_shop_item_id_fkey"
+            columns: ["shop_item_id"]
+            isOneToOne: false
+            referencedRelation: "shop_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shop_items: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          point_cost: number
+          stock: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          point_cost?: number
+          stock?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          point_cost?: number
+          stock?: number | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -163,12 +270,40 @@ export type Database = {
           },
         ]
       }
+      user_points: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       is_bonus_hunt_owner: { Args: { hunt_id: string }; Returns: boolean }
+      redeem_item: {
+        Args: { p_item_id: string; p_user_id: string }
+        Returns: Json
+      }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
     }
