@@ -132,8 +132,8 @@ const Shop = () => {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="bg-purple-500/10 p-3 rounded-xl">
-                  <Star className="w-6 h-6 text-purple-400" />
+                <div className="bg-accent/10 p-3 rounded-xl">
+                  <Star className="w-6 h-6 text-accent" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Twitch Username</p>
