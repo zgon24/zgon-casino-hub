@@ -299,6 +299,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      increment_points: {
+        Args: { p_amount: number; p_user_id: string }
+        Returns: undefined
+      }
       is_bonus_hunt_owner: { Args: { hunt_id: string }; Returns: boolean }
       redeem_item: {
         Args: { p_item_id: string; p_user_id: string }

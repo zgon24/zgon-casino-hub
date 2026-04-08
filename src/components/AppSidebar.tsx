@@ -1,4 +1,4 @@
-import { Dices, Share2, HelpCircle, Mail, X } from "lucide-react";
+import { Dices, Share2, HelpCircle, Mail, X, ShoppingBag } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 interface AppSidebarProps {
@@ -11,6 +11,12 @@ const menuItems = [
     title: "Casinos",
     icon: Dices,
     href: "/casinos",
+    isRoute: true,
+  },
+  {
+    title: "Loja de Pontos",
+    icon: ShoppingBag,
+    href: "/shop",
     isRoute: true,
   },
   {
