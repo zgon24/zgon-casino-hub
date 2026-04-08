@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
 
   try {
     // 1. Get broadcaster ID
-    const userRes = await fetch(`${GATEWAY_URL}/helix/users?login=${CHANNEL_LOGIN}`, {
+    const userRes = await fetch(`${GATEWAY_URL}/users?login=${CHANNEL_LOGIN}`, {
       headers: {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "X-Connection-Api-Key": TWITCH_API_KEY,
