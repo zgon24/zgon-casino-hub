@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
     }
 
     // 2. Check if stream is live
-    const streamRes = await fetch(`${GATEWAY_URL}/helix/streams?user_login=${CHANNEL_LOGIN}`, {
+    const streamRes = await fetch(`${GATEWAY_URL}/streams?user_login=${CHANNEL_LOGIN}`, {
       headers: {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "X-Connection-Api-Key": TWITCH_API_KEY,
