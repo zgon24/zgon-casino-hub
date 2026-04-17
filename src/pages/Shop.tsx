@@ -22,7 +22,7 @@ interface ShopItem {
 }
 
 const Shop = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
   const { toast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [items, setItems] = useState<ShopItem[]>([]);
@@ -30,6 +30,8 @@ const Shop = () => {
   const [loadingItems, setLoadingItems] = useState(true);
   const [redeeming, setRedeeming] = useState<string | null>(null);
   const [twitchUsername, setTwitchUsername] = useState<string | null>(null);
+  const [twitchAvatar, setTwitchAvatar] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState<string | null>(null);
 
   useEffect(() => {
     fetchItems();
@@ -54,8 +56,19 @@ const Shop = () => {
   };
 
   const fetchTwitchUsername = async () => {
-    const { data } = await supabase.from("profiles").select("twitch_username").eq("user_id", user!.id).single();
+    const { data } = await supabase
+      .from("profiles")
+      .select("twitch_username, twitch_avatar_url, display_name")
+      .eq("user_id", user!.id)
+      .single();
     setTwitchUsername(data?.twitch_username ?? null);
+    setTwitchAvatar(data?.twitch_avatar_url ?? null);
+    setDisplayName(data?.display_name ?? null);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast({ title: "Sessão terminada", description: "Até à próxima!" });
   };
 
   const handleRedeem = async (item: ShopItem) => {
@@ -103,27 +116,69 @@ const Shop = () => {
 
           {/* User Info Bar */}
           {user ? (
-            <div className="bg-card border border-border/50 rounded-2xl p-6 mb-10 flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="bg-primary/10 p-3 rounded-xl">
-                  <Coins className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Os teus pontos</p>
-                  <p className="text-2xl font-bold text-foreground">{balance.toLocaleString()}</p>
-                </div>
-              </div>
+            <div className="relative bg-gradient-to-br from-card via-card to-[#9146FF]/5 border border-border/50 rounded-2xl p-6 mb-10 overflow-hidden">
+              {/* decorative glow */}
+              <div className="pointer-events-none absolute -top-20 -right-20 w-64 h-64 bg-[#9146FF]/10 blur-3xl rounded-full" />
+              <div className="pointer-events-none absolute -bottom-20 -left-20 w-64 h-64 bg-primary/10 blur-3xl rounded-full" />
 
-              <div className="flex items-center gap-4">
-                <div className="bg-accent/10 p-3 rounded-xl">
-                  <Star className="w-6 h-6 text-accent" />
+              <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+                {/* Points */}
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full" />
+                    <div className="relative bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 p-3.5 rounded-2xl">
+                      <Coins className="w-7 h-7 text-primary" />
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Os teus pontos</p>
+                    <p className="text-3xl font-extrabold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
+                      {balance.toLocaleString()}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Conta Twitch</p>
-                  <p className="text-base font-medium text-primary">
-                    {twitchUsername ? `@${twitchUsername}` : "—"}
-                  </p>
+
+                {/* Divider on desktop */}
+                <div className="hidden md:block h-16 w-px bg-border/50" />
+
+                {/* Twitch profile */}
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-[#9146FF]/40 blur-lg rounded-full" />
+                    <Avatar className="relative w-14 h-14 ring-2 ring-[#9146FF] ring-offset-2 ring-offset-card">
+                      <AvatarImage src={twitchAvatar ?? undefined} alt={twitchUsername ?? "Avatar"} />
+                      <AvatarFallback className="bg-[#9146FF]/20 text-[#9146FF] font-bold">
+                        {(twitchUsername ?? user.email ?? "?").slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="absolute -bottom-1 -right-1 bg-[#9146FF] rounded-full p-1 ring-2 ring-card">
+                      <Twitch className="w-3 h-3 text-white fill-white" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Conta Twitch</p>
+                      <BadgeCheck className="w-3.5 h-3.5 text-[#9146FF]" />
+                    </div>
+                    <p className="text-base font-bold text-foreground">
+                      {displayName ?? twitchUsername ?? "—"}
+                    </p>
+                    {twitchUsername && (
+                      <p className="text-xs text-[#9146FF]">@{twitchUsername}</p>
+                    )}
+                  </div>
                 </div>
+
+                {/* Logout */}
+                <Button
+                  onClick={handleSignOut}
+                  variant="outline"
+                  size="sm"
+                  className="border-border/50 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-colors"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </Button>
               </div>
             </div>
           ) : (
