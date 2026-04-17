@@ -5,9 +5,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AppSidebar from "@/components/AppSidebar";
 import SidebarTrigger from "@/components/SidebarTrigger";
-import { ShoppingBag, Coins, Gift, Star, AlertCircle, CheckCircle } from "lucide-react";
+import { ShoppingBag, Coins, Gift, AlertCircle, CheckCircle, LogOut, Twitch, BadgeCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 interface ShopItem {
   id: string;
