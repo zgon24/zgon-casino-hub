@@ -139,7 +139,7 @@ const Shop = () => {
             <div className="grid md:grid-cols-3 gap-4 text-sm text-muted-foreground">
               <div className="flex gap-3">
                 <span className="text-primary font-bold">1.</span>
-                <p>Liga o teu username da Twitch à tua conta</p>
+                <p>Entra com a tua conta Twitch</p>
               </div>
               <div className="flex gap-3">
                 <span className="text-primary font-bold">2.</span>
