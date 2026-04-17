@@ -28,8 +28,6 @@ const Shop = () => {
   const [loadingItems, setLoadingItems] = useState(true);
   const [redeeming, setRedeeming] = useState<string | null>(null);
   const [twitchUsername, setTwitchUsername] = useState<string | null>(null);
-  const [editingTwitch, setEditingTwitch] = useState(false);
-  const [twitchInput, setTwitchInput] = useState("");
 
   useEffect(() => {
     fetchItems();
@@ -56,23 +54,6 @@ const Shop = () => {
   const fetchTwitchUsername = async () => {
     const { data } = await supabase.from("profiles").select("twitch_username").eq("user_id", user!.id).single();
     setTwitchUsername(data?.twitch_username ?? null);
-    setTwitchInput(data?.twitch_username ?? "");
-  };
-
-  const saveTwitchUsername = async () => {
-    const username = twitchInput.trim().toLowerCase();
-    if (!username) return;
-    const { error } = await supabase
-      .from("profiles")
-      .update({ twitch_username: username })
-      .eq("user_id", user!.id);
-    if (error) {
-      toast({ title: "Erro", description: "Não foi possível guardar o username. Talvez já esteja a ser usado.", variant: "destructive" });
-    } else {
-      setTwitchUsername(username);
-      setEditingTwitch(false);
-      toast({ title: "Guardado!", description: "O teu username da Twitch foi ligado à conta." });
-    }
   };
 
   const handleRedeem = async (item: ShopItem) => {
@@ -136,30 +117,10 @@ const Shop = () => {
                   <Star className="w-6 h-6 text-accent" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Twitch Username</p>
-                  {editingTwitch ? (
-                    <div className="flex gap-2">
-                      <input
-                        value={twitchInput}
-                        onChange={(e) => setTwitchInput(e.target.value)}
-                        placeholder="o_teu_username"
-                        className="bg-background border border-border rounded-lg px-3 py-1 text-sm text-foreground w-40"
-                      />
-                      <button onClick={saveTwitchUsername} className="text-xs bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-1 rounded-lg transition-colors">
-                        Guardar
-                      </button>
-                      <button onClick={() => setEditingTwitch(false)} className="text-xs text-muted-foreground hover:text-foreground">
-                        Cancelar
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => setEditingTwitch(true)}
-                      className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                    >
-                      {twitchUsername ? `@${twitchUsername}` : "Ligar conta →"}
-                    </button>
-                  )}
+                  <p className="text-sm text-muted-foreground">Conta Twitch</p>
+                  <p className="text-base font-medium text-primary">
+                    {twitchUsername ? `@${twitchUsername}` : "—"}
+                  </p>
                 </div>
               </div>
             </div>

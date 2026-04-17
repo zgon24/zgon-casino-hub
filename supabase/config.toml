@@ -1,1 +1,7 @@
 project_id = "mfcjhyzuxtdfqieckcbk"
+
+[functions.twitch-auth]
+verify_jwt = false
+
+[functions.twitch-auth-callback]
+verify_jwt = false
