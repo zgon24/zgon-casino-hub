@@ -142,17 +142,21 @@ Deno.serve(async (req) => {
 
       userId = createdUser.user.id;
 
-      // Upsert profile
-      await supabase.from("profiles").upsert(
-        {
-          user_id: userId,
+      // The handle_new_user trigger already created a profile row with the email
+      // as display_name. Force-update it with the real Twitch info.
+      const { error: updateErr } = await supabase
+        .from("profiles")
+        .update({
           twitch_id: twitchId,
           twitch_username: twitchLogin,
           twitch_avatar_url: twitchAvatar,
           display_name: twitchDisplayName,
-        },
-        { onConflict: "user_id" },
-      );
+        })
+        .eq("user_id", userId);
+
+      if (updateErr) {
+        console.error("profile update error:", updateErr);
+      }
     }
 
     // Generate a magic-link-style session by creating an action link
