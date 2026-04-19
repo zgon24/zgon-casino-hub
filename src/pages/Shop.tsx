@@ -160,11 +160,10 @@ const Shop = () => {
                       <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Conta Twitch</p>
                       <BadgeCheck className="w-3.5 h-3.5 text-[#9146FF]" />
                     </div>
-                    <p className="text-base font-bold text-foreground">
-                      {displayName ?? twitchUsername ?? "—"}
-                    </p>
-                    {twitchUsername && (
-                      <p className="text-xs text-[#9146FF]">@{twitchUsername}</p>
+                    {twitchUsername ? (
+                      <p className="text-base font-bold text-foreground">@{twitchUsername}</p>
+                    ) : (
+                      <p className="text-base font-bold text-foreground">—</p>
                     )}
                   </div>
                 </div>
